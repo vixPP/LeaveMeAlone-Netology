@@ -6,6 +6,8 @@
 
 class UCameraComponent;
 class USpringArmComponent;
+class ULMAHealthComponent;
+class UAnimMontage;
 
 UCLASS()
 class LEAVEMEALONE_API ALMADefaultCharacter : public ACharacter
@@ -45,23 +47,65 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera|Zoom")
 		float ZoomStep = 10.f;
 
+	//HP
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components|Health")
+	ULMAHealthComponent* HealthComponent;
+
+	//dead
+	UPROPERTY(EditDefaultsOnly, Category="Animation")
+	UAnimMontage* DeathMontage;
+
+	//sprint
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Sprint")
+	bool isSprinting = true;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Sprint")
+	float CurrentStamina;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Sprint")
+	float Stamina = 100.0f; 
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Sprint")
+	float MinusStamina = 1.0f;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Sprint")
+	float PlusStamina = 1.0f;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Sprint")
+	float MaxStamina = 100.0f;
+
+
+	
 
 	virtual void BeginPlay() override;
 	
 public:	
+	UFUNCTION()
+	ULMAHealthComponent* GetHealthComponent() const { return HealthComponent; }
 
 	virtual void Tick(float DeltaTime) override;
-
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
+	void OnDeath();
 private:
 
 	float YRotation = -75.0f;
 	float FOV = 55.0f;
 	float ArmLength = 1700.0f;
 	
-
 	void MoveForward(float Value); // будет отвечать за движение персонажа по оси X.
 	void MoveRight(float Value);   // будет отвечать за движение персонажа по оси Y.
 	void CameraZoom(float Value); //Приближение камеры
+
+	void RotationPlayerOnCursor();
+	
+	void OnHealthChanged(float NewHealth);
+
+	//Srint//
+	void StartSprint();
+	void StopSprint();
+	void DecreseaseStamina();
+	void IncreaseStamina();
+	void UpdateStamina();
+	
 };
