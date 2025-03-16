@@ -4,10 +4,12 @@
 #include "GameFramework/Character.h"
 #include "LMADefaultCharacter.generated.h"
 
+
 class UCameraComponent;
 class USpringArmComponent;
 class ULMAHealthComponent;
 class UAnimMontage;
+//class ULMAWeaponComponent;
 
 UCLASS()
 class LEAVEMEALONE_API ALMADefaultCharacter : public ACharacter
@@ -75,7 +77,8 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Sprint")
 	float MaxStamina = 100.0f;
 
-
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
+	ULMAWeaponComponent* WeaponComponent;
 	
 
 	virtual void BeginPlay() override;

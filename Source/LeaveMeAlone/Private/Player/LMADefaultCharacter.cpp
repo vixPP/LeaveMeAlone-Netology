@@ -39,6 +39,8 @@ ALMADefaultCharacter::ALMADefaultCharacter()
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationYaw = false;
 	bUseControllerRotationRoll = false;
+
+	WeaponComponent = CreateDefaultSubobject<ULMAWeaponComponent>("Weapon");
 }
 
 
