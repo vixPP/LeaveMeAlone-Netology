@@ -7,6 +7,7 @@
 #include "Components/InputComponent.h"
 #include "Components/LMAHealthComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Weapon/LMAWeaponComponent.h"
 
 
 
@@ -17,7 +18,6 @@ ALMADefaultCharacter::ALMADefaultCharacter()
 	PrimaryActorTick.bCanEverTick = true;
 
 	SpringArmComponent = CreateDefaultSubobject<USpringArmComponent>("SpringArm");
-	//SpringArmComponent->SetupAttachment(GetMesh(), "CameraSocket");
 	SpringArmComponent->SetupAttachment(GetRootComponent());
 	SpringArmComponent->SetUsingAbsoluteRotation(true);
 	SpringArmComponent->TargetArmLength = ArmLength;
@@ -40,7 +40,10 @@ ALMADefaultCharacter::ALMADefaultCharacter()
 	bUseControllerRotationYaw = false;
 	bUseControllerRotationRoll = false;
 
+	//Оружие
 	WeaponComponent = CreateDefaultSubobject<ULMAWeaponComponent>("Weapon");
+
+
 }
 
 
@@ -87,7 +90,13 @@ void ALMADefaultCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 
 	PlayerInputComponent->BindAction("Sprint", IE_Pressed, this, &ALMADefaultCharacter::StartSprint);
 	PlayerInputComponent->BindAction("Sprint", IE_Released, this, &ALMADefaultCharacter::StopSprint);
-}
+
+	PlayerInputComponent->BindAction("Fire", IE_Pressed, WeaponComponent, &ULMAWeaponComponent::StartFire);
+	PlayerInputComponent->BindAction("Fire", IE_Released, WeaponComponent, &ULMAWeaponComponent::StopFire);
+
+	PlayerInputComponent->BindAction("Reload", IE_Pressed, WeaponComponent, &ULMAWeaponComponent::Reload);
+	
+}			
 
 void ALMADefaultCharacter::MoveForward(float Value)
 {
@@ -153,18 +162,15 @@ void ALMADefaultCharacter::OnHealthChanged(float NewHealth)
 
 void ALMADefaultCharacter::StartSprint()
 {
-
-	GetCharacterMovement()->MaxWalkSpeed = 650.0f;
+	GetCharacterMovement()->MaxWalkSpeed = SprintSpeed;
 	isSprinting = true;
-	UpdateStamina();
+	//UpdateStamina();
 }
 
 void ALMADefaultCharacter::StopSprint()
 {
-	
-	GetCharacterMovement()->MaxWalkSpeed = 450.0f;
+	GetCharacterMovement()->MaxWalkSpeed = defaultWalkSpeed;
 	isSprinting = false;
-	//UpdateStamina();
 }
 
 void ALMADefaultCharacter::DecreseaseStamina()

@@ -1,33 +1,62 @@
-
 #pragma once
 
+#include "Weapon/LMABaseWeapon.h"
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
 #include "LMAWeaponComponent.generated.h"
-//#include "Weapon/LMABaseWeapon.h"
 
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+class ALMABaseWeapon;
+class UAnimMontage;
+
+UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class LEAVEMEALONE_API ULMAWeaponComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
-public:	
-
+public:
 	ULMAWeaponComponent();
 
+	void Reload();
+
 protected:
-
-	virtual void BeginPlay() override;
-
 	UPROPERTY(EditDefaultsOnly, Category="Weapon")
 	TSubclassOf<ALMABaseWeapon> WeaponClass;
+
+	UPROPERTY(EditDefaultsOnly, Category="Weapon")
+	UAnimMontage* ReloadMontage;
 
 	UPROPERTY()
 	ALMABaseWeapon* Weapon = nullptr;
 
-public:	
-	
+	UFUNCTION()
+	void OnClipEmpty();
+
+	virtual void BeginPlay() override;
+
+
+
+
+public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	void SpawnWeapon();	
+	UFUNCTION(BlueprintCallable)
+	bool GetCurrentWeaponAmmo(FAmmoWeapon& AmmoWeapon) const;
+
+	void StartFire();
+	void StopFire();
+
+	void ReloadWeapon();
+	bool CanReload() const;
+
+private:
+
+
+	bool AnimReloading = false;
+	
+	void SpawnWeapon();
+	void InitAnimNotify();
+
+	void OnNotifyReloadFinished(USkeletalMeshComponent* SkeletalMesh);
+	
+
 };

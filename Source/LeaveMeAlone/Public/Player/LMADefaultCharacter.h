@@ -39,7 +39,7 @@ protected:
 	FVector CursorSize = FVector(20.0f, 40.0f, 40.0f);
 
 
-	/*Camera zoom settings*/
+	//Camera zoom settings
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera|Zoom")
 		float MinZoomLenght = 300.f;
 
@@ -60,7 +60,10 @@ protected:
 	//sprint
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Sprint")
-	bool isSprinting = true;
+	bool isSprinting = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sprint")
+	float SprintSpeed = 650.0f;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Sprint")
 	float CurrentStamina;
@@ -77,9 +80,10 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Sprint")
 	float MaxStamina = 100.0f;
 
+	
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
 	ULMAWeaponComponent* WeaponComponent;
-	
+
 
 	virtual void BeginPlay() override;
 	
@@ -95,6 +99,8 @@ private:
 	float YRotation = -75.0f;
 	float FOV = 55.0f;
 	float ArmLength = 1700.0f;
+	float defaultWalkSpeed = 300.0f;
+	float MinStaminaToSprint = 10.0f;
 	
 	void MoveForward(float Value); // будет отвечать за движение персонажа по оси X.
 	void MoveRight(float Value);   // будет отвечать за движение персонажа по оси Y.
